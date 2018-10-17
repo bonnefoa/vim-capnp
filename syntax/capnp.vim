@@ -19,15 +19,17 @@ syn keyword cpnpKeywords using annotation
 hi def link cpnpKeywords Keyword
 
 " Cpnp block structure
-syn keyword cpnpBlockInit struct union enum interface nextgroup=cpnpBlockName skipwhite
+syn keyword cpnpBlockInit struct enum interface nextgroup=cpnpBlockName skipwhite
 syn match cpnpBlockName /\w\+/ nextgroup=cpnpBlock,cpnpId skipwhite contained
+syn keyword cpnpGroupInit union group nextgroup=cpnpBlock skipwhite
 syn region cpnpBlock start="{" end="}" contains=@cpnpBlockGroup
 
 hi def link cpnpBlockInit Keyword
 hi def link cpnpBlockName Function
+hi def link cpnpGroupInit Keyword
 
 " Possible groups in block
-syn cluster cpnpBlockGroup contains=cpnpFieldName,cpnpComment,cpnpBlockInit,cpnpBlockEnd
+syn cluster cpnpBlockGroup contains=cpnpFieldName,cpnpComment,cpnpBlockInit,cpnpGroupInit,cpnpBlockEnd
 
 " Parameter block
 syn region cpnpParameter start="(" end=")" nextgroup=cpnpParameterType skipwhite
@@ -40,6 +42,7 @@ hi def link cpnpParameterType Type
 
 " Field declaration in block
 syn match cpnpFieldName /\w\+\s*@/me=e-1 nextgroup=cpnpFieldAnnotation skipwhite contained
+syn match cpnpFieldName /\w\+\s*:/me=e-1 nextgroup=cpnpGroupInit contained
 syn match cpnpFieldAnnotation /@\d\+\s*(/me=e-1 contained nextgroup=cpnpParameter skipwhite
 syn match cpnpFieldAnnotation /@\d\+\s*\:/he=e-1 contained nextgroup=cpnpFieldType,cpnpImport skipwhite
 syn match cpnpFieldAnnotation /@\d\+\s*\;/he=e-1 contained nextgroup=@cpnpBlockGroup skipwhite skipempty
@@ -50,7 +53,7 @@ hi def link cpnpFieldName Identifier
 hi def link cpnpFieldAnnotation Special
 hi def link cpnpFieldType Type
 
-" Import statetements
+" Import statements
 syn keyword cpnpImport import nextgroup=cpnpImportValue skipwhite
 syn match cpnpImportValue /"\(\w\|\.\)\+"\(\.\w\+\)\?;/he=e-1 contained
 
